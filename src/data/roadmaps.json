@@ -1,0 +1,98 @@
+{
+  "frontend": {
+    "title": "Frontend Developer",
+    "steps": [
+      {
+        "title": "Internet & Web Basics",
+        "description": "Understand how the internet works, HTTP protocols, DNS, and hosting basics.",
+        "status": "completed",
+        "links": [
+          { "label": "Welcome to AI tech blog", "url": "/blog/welcome" }
+        ]
+      },
+      {
+        "title": "HTML, CSS & JavaScript Foundations",
+        "description": "Master the core trio of the web. Build semantic structures, style with modern CSS layout modules, and make it interactive with JS ES6+.",
+        "status": "current",
+        "links": [
+          { "label": "Read: HTML/CSS Guide", "url": "/blog/react-basics" }
+        ]
+      },
+      {
+        "title": "React & Tailwind CSS",
+        "description": "Component-based architecture, state management (Hooks/Context), and utility-first styling.",
+        "status": "pending",
+        "links": [
+          { "label": "Getting Started with React", "url": "/blog/react-basics" }
+        ]
+      },
+      {
+        "title": "Advanced Ecosystem & Frameworks",
+        "description": "Next.js for SSR/SSG, state managers like Zustand/Redux, and testing (Jest/Cypress).",
+        "status": "pending",
+        "links": []
+      }
+    ]
+  },
+  "data": {
+    "title": "Data Analyst",
+    "steps": [
+      {
+        "title": "Python & Basic Statistics",
+        "description": "Learn the foundations of Python programming mixed with core statistical concepts.",
+        "status": "current",
+        "links": [
+          { "label": "Intro to Data Science", "url": "/blog/data-analysis-intro" }
+        ]
+      },
+      {
+        "title": "Data Manipulation (Pandas & Numpy)",
+        "description": "Clean, transform, and analyze large datasets efficiently.",
+        "status": "pending",
+        "links": []
+      },
+      {
+        "title": "Data Visualization & SQL",
+        "description": "Query databases with SQL and visualize insights with Matplotlib/Tableau.",
+        "status": "pending",
+        "links": []
+      }
+    ]
+  },
+  "uxui": {
+    "title": "UX/UI Designer",
+    "steps": [
+      {
+        "title": "Design Fundamentals & Typography",
+        "description": "Color theory, layout principles, and selecting the right fonts.",
+        "status": "pending",
+        "links": []
+      },
+      {
+        "title": "Wireframing & Prototyping in Figma",
+        "description": "Create low and high-fidelity prototypes to visualize user journeys.",
+        "status": "pending",
+        "links": [
+          { "label": "Welcome Post", "url": "/blog/welcome" }
+        ]
+      }
+    ]
+  },
+  "marketing": {
+    "title": "Digital Marketer",
+    "steps": [
+      {
+        "title": "SEO & Content Strategy",
+        "description": "Understand how search engines rank content and plan effective campaigns.",
+        "status": "pending",
+        "links": []
+      },
+      {
+        "title": "Data Analytics & KPIs",
+        "description": "Using Google Analytics to track user behavior and conversion events.",
+        "status": "pending",
+        "links": []
+      }
+    ]
+  }
+}
