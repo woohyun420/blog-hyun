@@ -23,24 +23,41 @@ const Diagnosis = () => {
       let recommendedJob = '';
       let priority = '';
       
+      const majorLower = formData.major.toLowerCase();
+      const isTech = /컴퓨터|소프트웨어|공학|개발|it|computer|cs|software|engineering|math|science/i.test(majorLower);
+      const isDesign = /디자인|예술|미술|design|art|creative/i.test(majorLower);
+      const level = formData.level;
+
       if (formData.interest === 'frontend') {
-        recommendedJob = 'Frontend Design Engineer';
-        priority = 'Master React and Tailwind CSS foundations';
+        recommendedJob = isDesign ? 'Frontend UX Engineer' : (level === 'advanced' ? 'Senior Frontend Engineer' : 'Frontend Developer');
+        priority = level === 'advanced' 
+            ? 'Advanced React patterns, Next.js architecture, and web performance' 
+            : 'React fundamentals, Tailwind CSS, and core JavaScript';
       } else if (formData.interest === 'data') {
-        recommendedJob = 'Data Analyst / Scientist';
-        priority = 'Learn Pandas, SQL, and Basic Statistics';
+        recommendedJob = isTech ? (level === 'advanced' ? 'AI/ML Engineer' : 'Data Scientist') : 'Data Analyst';
+        priority = level === 'advanced' 
+            ? 'Machine learning pipelines and large-scale data processing' 
+            : 'Python basics, SQL queries, and Pandas data analysis';
       } else if (formData.interest === 'uxui') {
-        recommendedJob = 'UX/UI Product Designer';
-        priority = 'Figma mastery and User Research basics';
+        recommendedJob = isTech ? 'UX Engineer' : (level === 'advanced' ? 'Lead Product Designer' : 'UX/UI Designer');
+        priority = level === 'advanced' 
+            ? 'Building scalable design systems and advanced micro-interactions' 
+            : 'Figma basics, wireframing, and intro to user research';
       } else {
-        recommendedJob = 'Growth Hacker / Digital Marketer';
-        priority = 'Data-driven marketing and SEO optimization';
+        recommendedJob = isTech ? 'Technical Growth Hacker' : (level === 'advanced' ? 'Growth Lead' : 'Digital Marketer');
+        priority = level === 'advanced' 
+            ? 'Marketing automation and deep funnel optimization' 
+            : 'SEO fundamentals, Google Analytics, and content strategy';
       }
+
+      const majorStr = formData.major ? formData.major.trim() : '';
+      const prefix = majorStr ? `Leveraging your '${majorStr}' background: ` : '';
+      priority = prefix + priority;
 
       setDiagnosisResult({
         ...formData,
         recommendedJob,
-        priority,
+        priority: priority + '.',
         timestamp: new Date().toLocaleDateString()
       });
       setIsSynthesizing(false);

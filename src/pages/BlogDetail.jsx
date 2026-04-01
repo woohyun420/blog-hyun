@@ -1,8 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import matter from 'gray-matter';
 import { ArrowLeft, Calendar, User, Clock } from 'lucide-react';
+
+const parseFrontmatter = (mdObj) => {
+  const md = typeof mdObj === 'string' ? mdObj : (mdObj?.default || mdObj?.raw || '');
+  if (!md) return { data: {}, content: '' };
+  
+  const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if (!match) return { data: {}, content: md };
+  
+  const data = {};
+  match[1].split('\n').forEach(line => {
+    const colonIdx = line.indexOf(':');
+    if (colonIdx > -1) {
+      const key = line.slice(0, colonIdx).trim();
+      let val = line.slice(colonIdx + 1).trim();
+      if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+      data[key] = val;
+    }
+  });
+  return { data, content: match[2] };
+};
 
 const BlogDetail = () => {
   const { postId } = useParams();
@@ -27,7 +46,7 @@ const BlogDetail = () => {
         if (modules[filePath]) {
           const rawContent = await modules[filePath]();
           // Extract frontmatter
-          const { data, content: markdownBody } = matter(rawContent);
+          const { data, content: markdownBody } = parseFrontmatter(rawContent);
           setMeta(data);
           setContent(markdownBody);
         } else {
@@ -35,7 +54,7 @@ const BlogDetail = () => {
         }
       } catch (err) {
         console.error(err);
-        setContent('# Error Loading Post\nSomething went wrong.');
+        setContent(`# Error Loading Post\nSomething went wrong.\n\n**Error details:** \n\`\`\`javascript\n${err.message || String(err)}\n\`\`\``);
       } finally {
         setLoading(false);
       }

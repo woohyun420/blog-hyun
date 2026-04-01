@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Route, Routes } from 'react-router-dom';
+import logo from '../assets/navilogo.png';
 
 const Navbar = () => {
   return (
@@ -8,7 +8,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center gap-2">
             <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <img src="/src/assets/logo.png" alt="CareerNavi Logo" className="h-[46px] w-auto" />
+              <img src={logo} alt="Logo" className="h-8" />
             </Link>
           </div>
           <div className="hidden md:flex space-x-8">
