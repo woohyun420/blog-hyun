@@ -41,7 +41,7 @@ const CategoryList = () => {
                </div>
                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-primary/20 backdrop-blur-sm">
                   <span className="bg-white text-primary font-bold px-4 py-2 rounded-full flex items-center gap-2">
-                    Read Story <ArrowRight size={16} />
+                    포스트 읽기 <ArrowRight size={16} />
                   </span>
                </div>
             </div>
