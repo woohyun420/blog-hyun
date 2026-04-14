@@ -1,66 +1,26 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Calendar, User, Clock } from 'lucide-react';
-
-const parseFrontmatter = (mdObj) => {
-  const md = typeof mdObj === 'string' ? mdObj : (mdObj?.default || mdObj?.raw || '');
-  if (!md) return { data: {}, content: '' };
-  
-  const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
-  if (!match) return { data: {}, content: md };
-  
-  const data = {};
-  match[1].split('\n').forEach(line => {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx > -1) {
-      const key = line.slice(0, colonIdx).trim();
-      let val = line.slice(colonIdx + 1).trim();
-      if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
-      data[key] = val;
-    }
-  });
-  return { data, content: match[2] };
-};
+import { mockPosts } from '../data/mockPosts';
 
 const BlogDetail = () => {
   const { postId } = useParams();
-  const [content, setContent] = useState('');
-  const [meta, setMeta] = useState({});
+  const navigate = useNavigate();
+  const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Dynamic import of markdown files
-    const loadPost = async () => {
-      try {
-        setLoading(true);
-        // We use raw-loader or fetch it depending on Vite setup
-        // For Vite, dynamic imports with ?raw append can be used, but since we have dynamic id,
-        // we might need to fetch instead or use import.meta.glob.
-        // For this demo, we'll try to fetch it from public/posts directory or use import.meta.glob
-        
-        // Simulating import via Vite's glob since fetching local fs in browser is tricky
-        const modules = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default' });
-        const filePath = `../posts/${postId}.md`;
-        
-        if (modules[filePath]) {
-          const rawContent = await modules[filePath]();
-          // Extract frontmatter
-          const { data, content: markdownBody } = parseFrontmatter(rawContent);
-          setMeta(data);
-          setContent(markdownBody);
-        } else {
-          setContent('# Post Not Found\nSorry, the requested post does not exist.');
-        }
-      } catch (err) {
-        console.error(err);
-        setContent(`# Error Loading Post\nSomething went wrong.\n\n**Error details:** \n\`\`\`javascript\n${err.message || String(err)}\n\`\`\``);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (postId) loadPost();
+    setLoading(true);
+    // Find post in our mock data
+    const foundPost = mockPosts.find(p => p.id === postId);
+    
+    if (foundPost) {
+      setPost(foundPost);
+    } else {
+      setPost(null);
+    }
+    setLoading(false);
   }, [postId]);
 
   if (loading) {
@@ -74,38 +34,40 @@ const BlogDetail = () => {
     );
   }
 
-  return (
-    <article className="max-w-3xl mx-auto px-4 py-16">
-      <Link to="/roadmaps" className="inline-flex items-center gap-2 text-slate-500 hover:text-primary mb-8 font-medium transition-colors">
-        <ArrowLeft size={18} /> Back to Roadmaps
-      </Link>
-      
-      {meta.title && (
-        <header className="mb-12 border-b border-slate-200 pb-8">
-          <div className="flex items-center gap-3 mb-4">
-            {meta.category && (
-              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-                {meta.category}
-              </span>
-            )}
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-            {meta.title}
-          </h1>
-          <div className="flex flex-wrap items-center gap-6 text-sm text-slate-500 font-medium">
-            {meta.date && (
-              <div className="flex items-center gap-2"><Calendar size={16} />{meta.date}</div>
-            )}
-            {meta.author && (
-              <div className="flex items-center gap-2"><User size={16} />{meta.author}</div>
-            )}
-            <div className="flex items-center gap-2"><Clock size={16} />5 min read</div>
-          </div>
-        </header>
-      )}
+  if (!post) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+        <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
+        <p className="text-slate-600 mb-8">The post you are looking for does not exist.</p>
+        <button onClick={() => navigate(-1)} className="text-primary font-bold">Go Back</button>
+      </div>
+    );
+  }
 
-      <div className="prose prose-lg prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-a:text-secondary hover:prose-a:text-primary prose-img:rounded-2xl prose-img:shadow-lg">
-        <ReactMarkdown>{content}</ReactMarkdown>
+  return (
+    <article className="max-w-3xl mx-auto px-4 py-16 animate-fade-in-up">
+      <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-slate-500 hover:text-primary mb-8 font-medium transition-colors">
+        <ArrowLeft size={18} /> Back
+      </button>
+      
+      <header className="mb-12 border-b border-slate-200 pb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+            {post.categoryName}
+          </span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
+          {post.title}
+        </h1>
+        <div className="flex flex-wrap items-center gap-6 text-sm text-slate-500 font-medium">
+          <div className="flex items-center gap-2"><Calendar size={16} />{post.date}</div>
+          <div className="flex items-center gap-2"><User size={16} />{post.author}</div>
+          <div className="flex items-center gap-2"><Clock size={16} />5 min read</div>
+        </div>
+      </header>
+
+      <div className="prose prose-lg prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-a:text-primary hover:prose-a:text-primary-light prose-img:rounded-3xl prose-img:shadow-xl prose-img:border prose-img:border-slate-100">
+        <ReactMarkdown>{post.content}</ReactMarkdown>
       </div>
     </article>
   );

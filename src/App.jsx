@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Diagnosis from './pages/Diagnosis';
 import Roadmaps from './pages/Roadmaps';
 import BlogDetail from './pages/BlogDetail';
+import CategoryList from './pages/CategoryList';
 import { AppProvider } from './contexts/AppContext';
 
 function App() {
@@ -15,7 +16,10 @@ function App() {
             <Route index element={<Home />} />
             <Route path="diagnosis" element={<Diagnosis />} />
             <Route path="roadmaps" element={<Roadmaps />} />
-            <Route path="blog/:postId" element={<BlogDetail />} />
+            <Route path="category/:categoryId" element={<CategoryList />} />
+            <Route path="post/:postId" element={<BlogDetail />} />
+            {/* Fallback for the old link if it remains anywhere */}
+            <Route path="blog/:postId" element={<BlogDetail />} /> 
           </Route>
         </Routes>
       </Router>
